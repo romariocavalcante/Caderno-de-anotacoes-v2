@@ -1,0 +1,8 @@
+venv
+db.sqlite3
+ComandosUteis.txt
+templates de teste
+caderno/__pycache__
+caderno/migrations/*
+!caderno/migrations/__init__.py
+cadernodeanotacoesv2/__pycache__

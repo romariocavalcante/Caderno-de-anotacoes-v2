@@ -1,0 +1,486 @@
+<!-- Extende do Template Base -->
+{% extends 'base.html' %}
+<!-- Carrega os arquivos Estáticos CSS, JS, Entre outros.... -->
+{% load static %}
+<!-- Styles -->
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/anotacoes/anotacoes.css' %}"> {% endblock %}
+
+<style>
+    #modal-confirmacao {
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Estilo para a barra de rolagem do formulário */
+    .list-itens::-webkit-scrollbar {
+        width: 1px;
+        /* Largura mais fina */
+    }
+</style>
+
+<!-- Conteúdo da Página -->
+{% block content %}
+<!-- Conteúdo principal que ocupa o restante da tela -->
+<main class="max-h-full flex-grow bg-gray-100 flex items-start justify-center gap-8">
+    <!-- Menu lateral à esquerda -->
+    <aside class="w-1/5 min-h-full bg-gray-100 px-4 pt-4 pb-6 ">
+        <h2 class="text-2xl font-bold mb-4 py-4 text-center shadow bg-gray-200">Clientes</h2>
+        <div class="flex justify-between px-8 text-sm">
+            <a href="{% url 'adicionar_cliente' %}" class="flex flex-row gap-2 p-2 rounded-lg">
+                <i class="fas fa-user-plus text-lg"></i>
+                <span class="font-semibold">Adicionar Cliente</span>
+            </a>
+
+
+
+        </div>
+        <div class="border p-5">
+            <ul id="ul-client" class="divide-y divide-gray-300">
+                {% for cliente in clientes %}
+                <li class="py-3 flex items-center justify-between">
+                    <a href="{% url 'cliente_id' id=cliente.id %}"
+                        class="text-gray-500 hover:text-gray-700 flex-1 text-left">
+                        {{ cliente.nome }}
+                    </a>
+                    {% if cliente.id %}
+                    <button onclick="mostrarModal('{% url 'deletar_cliente' cliente.id %}')"
+                        class="text-red-500 hover:text-red-700 flex items-center">
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                    {% else %}
+                    <span class="text-gray-400 text-sm italic">Cliente sem ID válido!</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+    </aside>
+    <!-- Seção principal com artigos -->
+    <section class="w-2/4 min-h-full">
+        <div class="min-h-full mx-auto p-4">
+            <h2 class="text-2xl font-bold mb-4 shadow py-4 bg-gray-200 text-center border">Anotações de {{cliente.nome}}
+            </h2>
+
+            <!-- Botões lado a lado com tamanho reduzido e texto curto -->
+            <div class=" flex justify-between px-4 space-x-4">
+                <!-- Botão de adicionar -->
+                <button id="addItemBtn" onclick="toggleModal()"
+                    class="bg-green-500 text-white px-4 py-2 text-sm rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                    <i class="fas fa-plus"></i>
+                    <span>Adicionar Item</span>
+                </button>
+
+                <!-- Botão de deletar (abre a janela de confirmação) -->
+                <button id="deleteBtn"
+                    class="bg-red-500 text-white px-4 py-2 text-sm rounded-md hover:bg-red-600 transition duration-300 flex items-center space-x-2">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Deletar</span>
+                </button>
+            </div>
+
+
+            <!-- Tabela com scroll -->
+            <div class="container-table overflow-y-scroll mt-4" style="height: 55vh;">
+                <table class="bg-white rounded-lg w-full">
+                    <!-- Cabeçalho da tabela fixo -->
+                    <thead class="bg-gray-200 sticky z-30 shadow" style="top: 0px;">
+                        <tr>
+                            <th class="px-4 py-2 text-center" style="width: 5%;">
+                                <input type="checkbox" class="form-checkbox h-4 w-4">
+                            </th>
+                            <th class="px-4 py-2 text-center" style="width: 40%;">Item</th>
+                            <th class="px-4 py-2 text-center" style="width: 0%;">Quantidade</th>
+                            <th class="px-4 py-2 text-center" style="width: 20%;">Preço</th>
+                            <th class="px-4 py-2 text-center" style="width: 40%;">Data de
+                                Aquisição
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <!-- Corpo da tabela com rolagem -->
+                    <tbody id="table-body" style="top: 0px;">
+                        {% for cliente_item in cliente_itens %}
+                        <tr class="hover:bg-gray-100">
+                            <td class="px-4 py-2 text-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4">
+                            </td>
+                            <td class="px-4 py-2 text-center">{{ cliente_item.item.nome }}</td>
+                            <td class="px-4 py-2 text-center">{{ cliente_item.quantidade }}</td>
+                            <td class="px-4 py-2 text-center">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
+                            <td class="px-4 py-2 text-center">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhum item associado a este
+                                cliente.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <!-- Rodapé da tabela fixo -->
+                    <tfoot class="bg-gray-200 sticky z-30 shadow" style="bottom: 0px;">
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 font-bold text-center text-lg">
+                                Total
+                            </td>
+                            <td class="px-4 py-2 text-center text-lg font-bold">
+                                R$ {{ total|floatformat:2|default:"0.00" }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+
+            <!-- Botão de confirmar pagamento -->
+            <!-- Botões -->
+            <div class="mt-8 flex justify-end space-x-4">
+                <!-- Botão de pagamento parcial -->
+                <button id="partialPaymentBtn"
+                    class="bg-yellow-500 text-white px-4 py-2 text-xs rounded-md hover:bg-yellow-600 transition duration-300 flex items-center space-x-2">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Pagamento Parcial</span>
+                </button>
+
+                <!-- Botão de confirmar pagamento -->
+                <button id="confirmPaymentBtn"
+                    class="bg-green-500 text-white px-4 py-2 text-xs rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Confirmar Pagamento</span>
+                </button>
+            </div>
+
+            <!-- Modal de Confirmar Pagamento -->
+            <div id="paymentConfirmationModal"
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
+                <div class="bg-white rounded-lg p-6 max-w-lg w-full">
+                    <h3 class="text-xl font-semibold mb-4">Confirmar Pagamento</h3>
+                    <p class="mb-4">Escolha a forma de pagamento:</p>
+
+                    <!-- Formulário de formas de pagamento -->
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="creditCard" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-green-500" checked>
+                            <label for="creditCard" class="text-lg">Cartão de Débito</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="boleto" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-blue-500">
+                            <label for="boleto" class="text-lg">Cartão de Crédito</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="paypal" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-yellow-500">
+                            <label for="paypal" class="text-lg">Dinheiro</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="pix" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-purple-500">
+                            <label for="pix" class="text-lg">Pix</label>
+                        </div>
+                    </div>
+
+                    <!-- Total a ser pago -->
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-lg font-semibold">Total a Pagar:</span>
+                        <span class="text-xl text-green-600">R$ 150,00</span>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mt-6">
+                        <!-- Botão de Cancelar -->
+                        <button id="cancelPaymentBtn"
+                            class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">
+                            Cancelar
+                        </button>
+                        <!-- Botão de Confirmar Pagamento -->
+                        <button id="submitPaymentBtn"
+                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                            Confirmar Pagamento
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal de Pagamento Parcial -->
+            <div id="partialPaymentModal"
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden"
+                style="z-index: 30;">
+                <div class="bg-white rounded-lg p-6 max-w-lg w-full">
+                    <h3 class="text-xl font-semibold mb-4">Pagamento Parcial</h3>
+                    <p class="mb-4">Escolha o valor a ser pago e a forma de pagamento:</p>
+
+                    <!-- Formulário de pagamento parcial -->
+                    <div class="space-y-4">
+                        <!-- Campo para o valor do pagamento parcial -->
+                        <div class="flex items-center space-x-3">
+                            <label for="partialAmount" class="text-lg">Valor do Pagamento:</label>
+                            <input type="number" id="partialAmount" class="w-32 p-2 border rounded"
+                                placeholder="R$ 0,00" min="1">
+                        </div>
+
+                        <!-- Opções de forma de pagamento -->
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="creditCard" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-green-500">
+                            <label for="creditCard" class="text-lg">Cartão de Crédito</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="boleto" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-blue-500">
+                            <label for="boleto" class="text-lg">Cartão de Débito</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="paypal" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-yellow-500">
+                            <label for="paypal" class="text-lg">Dinheiro</label>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" id="pix" name="paymentMethod"
+                                class="form-radio h-5 w-5 text-purple-500">
+                            <label for="pix" class="text-lg">Pix</label>
+                        </div>
+                    </div>
+
+                    <!-- Total a ser pago -->
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-lg font-semibold">Total a Pagar:</span>
+                        <span class="text-xl text-green-600">R$ 150,00</span>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mt-6">
+                        <!-- Botão de Cancelar -->
+                        <button id="cancelPartialPaymentBtn"
+                            class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">
+                            Cancelar
+                        </button>
+                        <!-- Botão de Confirmar Pagamento Parcial -->
+                        <button id="submitPartialPaymentBtn"
+                            class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                            Confirmar Pagamento Parcial
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal de Adicionar Itens -->
+
+            <div id="modalAdicionarItens"
+                class="fixed inset-0 z-50 hidden flex justify-center items-center bg-gray-500 bg-opacity-75">
+                <div class="flex flex-col justify-center bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+
+                    <h3 class="text-lg font-semibold mb-4 text-center">Adicionar Itens</h3>
+
+                    <!-- Exibe o nome do cliente selecionado -->
+                    <div class="flex justify-between">
+                        <div class="mb-4 text-center font-medium text-gray-700">
+                            Cliente: <span id="nomeCliente">{{ cliente.nome }}</span>
+                        </div>
+                        <div class="mb-4 text-center font-medium text-gray-700">
+                            Total: <span id="nomeTotal">R$ {{ total|floatformat:2|default:"0.00" }}</span>
+                        </div>
+                    </div>
+                    <!-- Campo de Pesquisa -->
+                    <div class="mb-2 px-1 border border-blue-500">
+                        <label for="itemSearch" class="text-gray-700">Pesquisar Itens:</label>
+                        <input type="text" id="itemSearch" onkeyup="filterItems()" placeholder="Pesquise os itens..."
+                            class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <form id="list-itens" action="{% url 'adicionar_itens_cliente' %}" method="POST"
+                        class="list-itens container-table overflow-y-scroll" style="height: 55vh;">
+                        {% csrf_token %}
+
+                        <!-- Campo oculto para enviar o id do cliente -->
+                        <input type="hidden" id="clienteId" name="cliente" value="{{ cliente.id }}">
+
+                        <!-- Selecione os Itens -->
+                        <table class="min-w-full table-auto border-collapse">
+                            <thead class="bg-gray-200 sticky z-30 shadow" style="top: 0px;">
+                                <tr class="bg-gray-200">
+                                    <th class="px-4 py-2 text-left">Selecione os Itens</th>
+                                    <th class="px-4 py-2 text-left">Preço</th>
+                                    <th class="px-4 py-2 text-left">Quantidade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" style="top: 0px;">
+                                {% for item in itens %}
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="item_{{ item.id }}" name="itens"
+                                                value="{{ item.id }}" class="mr-2">
+                                            <label for="item_{{ item.id }}" class="text-gray-700">{{ item.nome
+                                                }}</label>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-2 text-gray-700">R$ {{ item.preco }}</td>
+                                    <td class="px-4 py-2">
+                                        <input type="number" name="quantidade_{{ item.id }}"
+                                            id="quantidade_{{ item.id }}" value="1" min="1"
+                                            class="w-16 p-2 mt-1 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <!-- Botões -->
+                        <div class="mt-4 p-2 flex justify-end gap-4 bg-white sticky z-30 shadow" style="bottom: 0px;">
+                            <button type="button"
+                                class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow-md hover:bg-gray-300"
+                                onclick="toggleModal()">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">
+                                Confirmar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+
+
+
+            <!-- Modal de confirmação para deletar o item -->
+            <div id="confirmationModal"
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
+                <div class="bg-white rounded-lg p-6 w-1/3">
+                    <h3 class="text-xl font-semibold mb-4">Confirmar Deletação</h3>
+                    <p class="mb-4">Tem certeza de que deseja deletar este item?</p>
+                    <div class="flex justify-end space-x-4">
+                        <button id="cancelBtn"
+                            class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">Cancelar</button>
+                        <button id="confirmDeleteBtn"
+                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Confirmação de deletação do Cliente -->
+            <div id="modal-confirmacao"
+                class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Confirmar Exclusão</h2>
+                    <p class="text-gray-600 mb-6">Tem certeza de que deseja excluir este
+                        cliente?</p>
+                    <div class="flex justify-end gap-4">
+                        <button id="cancelar"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none">
+                            Cancelar
+                        </button>
+                        <form id="form-deletar" method="POST" action="">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none">
+                                Confirmar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <section class="w-1/5 min-h-full pb-4 px-6 shadow-lg rounded-lg bg-white">
+        <div class="min-h-full mx-auto py-4">
+            <h2 class="text-2xl font-bold mb-4 py-4 bg-gray-200 text-center rounded border-b border-gray-300">
+                Observações
+            </h2>
+        </div>
+        <div class="p-6 shadow-md min-h-full bg-gray-100 rounded-lg mb-4" style="max-height: 400px; height: 200px;">
+            <textarea
+                id="observacoesTextarea"
+                class="w-full  h-auto p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Adicione suas observações aqui..."
+                style="height: 50px;"
+                oninput="autoResize(this)"
+            ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+            <!-- Botão de adicionar Observações -->
+            <button id="addItemBtn"
+                class="bg-green-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                <i class="fas fa-plus"></i>
+                <span>Adicionar</span>
+            </button>
+            <!-- Botão de deletar (abre a janela de confirmação) -->
+            <button id="deleteBtn"
+                class="bg-red-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-red-600 transition duration-300 flex items-center space-x-2">
+                <i class="fas fa-trash-alt"></i>
+                <span>Deletar</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+<!-- Scripts -->
+{% block scripts %}
+<script>
+    // Mostrar Modal de Confirmação de Deletação do Cliente
+    function mostrarModal(url) {
+        const modal = document.getElementById('modal-confirmacao');
+        const form = document.getElementById('form-deletar');
+        modal.classList.remove('hidden');
+        form.action = url; // Define a URL do cliente no formulário
+    }
+
+    // Quando clicar no botão cancelar
+    document.getElementById('cancelar').addEventListener('click', () => {
+        const modal = document.getElementById('modal-confirmacao');
+        modal.classList.add('hidden');
+    });
+
+    // Modal Adicionar Item ------------------------------------------------/
+
+    // Função Abrir Modal Adicionar Item
+    function toggleModal() {
+        const modal = document.getElementById('modalAdicionarItens');
+        modal.classList.toggle('hidden');
+    }
+
+    // Função Fechar Modal Adicionar Clientes quando não há Clientes.
+    function closeErrorModal() {
+        const errorModal = document.querySelector('#modalAdicionarItens');
+        if (errorModal) {
+            errorModal.classList.add('hidden');
+        }
+    }
+
+    // Função para Filtrar os Itens
+    function filterItems() {
+        let input = document.getElementById('itemSearch');
+        let filter = input.value.toUpperCase();
+        let rows = document.querySelectorAll('.item-row');
+
+        rows.forEach(function (row) {
+            let itemName = row.querySelector('label').textContent || row.querySelector('label').innerText;
+            if (itemName.toUpperCase().indexOf(filter) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // Função para ajustar a altura do textarea conforme o conteúdo
+    function autoResize(element) {
+        const maxHeight = 400; // altura máxima da div
+        element.style.height = 'auto'; // Reseta a altura antes de medir
+        element.style.height = (element.scrollHeight > maxHeight ? maxHeight : element.scrollHeight) + 'px'; // Limita a altura e ativa o scroll
+    }
+
+</script>
+{% endblock %}

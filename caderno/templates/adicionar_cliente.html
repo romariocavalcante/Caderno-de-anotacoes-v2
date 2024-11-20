@@ -1,0 +1,115 @@
+<!-- Extende do Template Base -->
+{% extends 'base.html' %}
+<!-- Carrega os arquivos Estáticos CSS, JS, Entre outros.... -->
+{% load static %}
+<!-- Styles -->
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/addcliente/addcliente.css' %}"> {% endblock %}
+
+<!-- Conteúdo da Página -->
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto mt-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Cadastrar Cliente</h2>
+    <div>
+        <form action="" method="POST" class="space-y-6">
+            {% csrf_token %}
+            {% if erro %}
+            <div class="bg-red-100 text-red-700 border border-red-400 p-4 rounded-md">
+                {{ erro }}
+            </div>
+            {% endif %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label for="nome" class="block text-sm font-medium text-gray-700">Nome</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 capitalize"
+                        oninput="capitalizeInput(this)"
+                        id="nome" name="nome" required>
+                </div>
+                <div>
+                    <label for="contato" class="block text-sm font-medium text-gray-700">Contato</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        id="contato" name="contato" required>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                    <label for="rua" class="block text-sm font-medium text-gray-700">Rua</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 capitalize"
+                        oninput="capitalizeInput(this)"
+                        id="rua" name="rua">
+                </div>
+                <div>
+                    <label for="numero" class="block text-sm font-medium text-gray-700">Número</label>
+                    <input type="number"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        id="numero" name="numero">
+                </div>
+                <div>
+                    <label for="complemento" class="block text-sm font-medium text-gray-700">Complemento</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        oninput="capitalizeInput(this)"
+                        id="complemento" name="complemento">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                    <label for="bairro" class="block text-sm font-medium text-gray-700">Bairro</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        oninput="capitalizeInput(this)"
+                        id="bairro" name="bairro">
+                </div>
+                <div>
+                    <label for="cidade" class="block text-sm font-medium text-gray-700">Cidade</label>
+                    <input type="text"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        oninput="capitalizeInput(this)"
+                        id="cidade" name="cidade" value="{{cidade_padrao}}">
+                </div>
+                <div>
+                    <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
+                    <select id="estado"
+                        class="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        name="estado">
+                        {% for estado in estados %}
+                        <option value="{{ estado.sigla }}" {% if estado.sigla == estado_padrao %} selected {% endif %}>
+                            {{ estado.sigla }} - {{ estado.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-end gap-4">
+                <button type="reset" onclick="window.location.href='{% url 'anotacoes' %}'"
+                    class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Confirmar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    // Função para formatar o texto dos inputs deixar no modo Capitalize (Primeira Letra maiúscula, as demais ficam minúsculas)
+    function capitalizeInput(input) {
+        input.value = input.value.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    // Máscara para o campo Contato
+    $(document).ready(function () {
+        $('#contato').mask('(00) 00000-0000');
+    });
+</script>
+{% endblock %}

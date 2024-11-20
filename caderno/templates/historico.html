@@ -1,0 +1,86 @@
+<!-- Extende do Template Base -->
+{% extends 'base.html' %}
+<!-- Carrega os arquivos Estáticos CSS, JS, Entre outros.... -->
+{% load static %}
+<!-- Styles -->
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/base/base.css' %}"> {% endblock %}
+
+<!-- Conteúdo da Página -->
+{% block content %}
+<!-- Conteúdo principal que ocupa o restante da tela -->
+<main class="overflow-y-scroll ex-grow p-4 bg-gray-100 flex items-start justify-center gap-8">
+    <!-- Menu lateral à esquerda -->
+    <aside class="w-1/5 min-h-full bg-gray-100 px-4 pb-12 sticky top-0 z-20">
+        <h2 class="text-2xl font-bold mb-4 py-4 text-center shadow bg-gray-200">Clientes</h2>
+        <ul id="ul-client">
+            {% for cliente in clientes_unicos %}
+            <li class="py-2 border-b text-center">
+                <a href="#" class="text-gray-500 hover:text-gray-700">{{ cliente.nome }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <!-- Seção principal com artigos -->
+    <section class="w-2/4 max-h-full">
+        <!-- Título fixo -->
+        <h2 class="text-2xl font-bold mb-4 shadow py-4 bg-gray-200 text-center border sticky top-0 z-20"
+            style="position: sticky; top: 0;">Histórico de Pagamento</h2>
+
+        <!-- Tabela com scroll -->
+        <div class="mt-4">
+            <!-- Barra de Pesquisa -->
+            <div class="relative mb-4 sticky z-20">
+                <input type="text" id="searchInput" placeholder="Pesquisar itens..."
+                    class="w-full px-4 py-2 border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div class="container-table overflow-y-scroll" style="height: 55vh;">
+                <table class="bg-white rounded-lg w-full">
+                    <!-- Cabeçalho da tabela fixo -->
+                    <thead class="bg-gray-200 sticky z-30 shadow" style="top: 0px;">
+                        <tr>
+                            <th class="px-4 py-2 text-center" style="width: 40%;">Item</th>
+                            <th class="px-4 py-2 text-center" style="width: 10%;">Quantidade
+                            </th>
+                            <th class="px-4 py-2 text-center" style="width: 20%;">Preço</th>
+                            <th class="px-4 py-2 text-center" style="width: 30%;">Data de
+                                Aquisição
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <!-- Corpo da tabela com rolagem -->
+                    <tbody id="table-body" style="top: 0px;">
+                        {% for h in historico %}
+                        <tr class="hover:bg-gray-100">
+                            <td class="px-4 py-2 text-center" style="width: 40%;">{{ h.cliente.item.nome }}</td>
+                            <td class="px-4 py-2 text-center" style="width: 10%;">{{ h.cliente.quantidade }}</td>
+                            <td class="px-4 py-2 text-center" style="width: 20%;">{{ h.cliente.item.preco }}</td>
+                            <td class="px-4 py-2 text-center" style="width: 30%;">{{ h.cliente.data_registro|date:"d M, Y, H:i" }}h</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="bg-gray-200 shadow" style="bottom: 0;">
+                        <tr>
+                            <td colspan="3" class="px-4 py-2 font-bold text-center border border-gray-300 text-lg"
+                                style="width: 70%;">
+                                Total
+                            </td>
+                            <td class="px-4 py-2 border border-gray-300 text-center text-lg font-bold"
+                                style="width: 30%;">
+                                R$ {{ total|floatformat:2 }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+<!-- Scripts -->
+{% block scripts %}
+<script></script>
+{% endblock %}

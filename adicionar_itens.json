@@ -1,0 +1,235 @@
+[
+    {
+        "model": "caderno.Item",
+        "pk": 1,
+        "fields": {
+            "nome": "Água C Gás 500ml",
+            "preco": 4.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 2,
+        "fields": {
+            "nome": "Água de Coco",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 3,
+        "fields": {
+            "nome": "Água Mineral 1,5L",
+            "preco": 8.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 4,
+        "fields": {
+            "nome": "Água Mineral Galão",
+            "preco": 17.50
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 5,
+        "fields": {
+            "nome": "Água S Gás 500ml",
+            "preco": 3.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 6,
+        "fields": {
+            "nome": "Amstel Caixa",
+            "preco": 45.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 7,
+        "fields": {
+            "nome": "Amstel Lata 269ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 8,
+        "fields": {
+            "nome": "Antárctica Original 269ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 9,
+        "fields": {
+            "nome": "Antárctica Original Garrafa 600ml",
+            "preco": 13.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 10,
+        "fields": {
+            "nome": "Antárctica Original Lata 350ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 11,
+        "fields": {
+            "nome": "Antárctica Pilsen Lata 269ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 12,
+        "fields": {
+            "nome": "Batata Adorettos Churrasco",
+            "preco": 7.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 13,
+        "fields": {
+            "nome": "Batata Adorettos Original",
+            "preco": 7.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 14,
+        "fields": {
+            "nome": "Brahma Chopp Garrafa 600ml",
+            "preco": 11.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 15,
+        "fields": {
+            "nome": "Brahma Chopp Lata 269ml",
+            "preco": 4.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 16,
+        "fields": {
+            "nome": "Brahma Duplo Malte Lata 350ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 17,
+        "fields": {
+            "nome": "Brahma Zero Longneck 355ml",
+            "preco": 6.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 18,
+        "fields": {
+            "nome": "Budweiser Garrafa 600ml",
+            "preco": 12.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 19,
+        "fields": {
+            "nome": "Budweiser Lata 269ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 20,
+        "fields": {
+            "nome": "Budweiser Longneck 330ml",
+            "preco": 8.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 21,
+        "fields": {
+            "nome": "Budweiser Longneck 330ml (Pack 06un)",
+            "preco": 45.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 22,
+        "fields": {
+            "nome": "Campari Dose",
+            "preco": 15.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 23,
+        "fields": {
+            "nome": "Campari Litro",
+            "preco": 80.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 24,
+        "fields": {
+            "nome": "Caracu Longneck 355ml",
+            "preco": 10.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 25,
+        "fields": {
+            "nome": "Carvão Saco",
+            "preco": 16.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 26,
+        "fields": {
+            "nome": "Chopp de Vinho Branco 600ml",
+            "preco": 24.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 27,
+        "fields": {
+            "nome": "Cigarro Dunhill Carlton",
+            "preco": 17.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 28,
+        "fields": {
+            "nome": "Cigarro Luke Strike Double Ice",
+            "preco": 16.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 29,
+        "fields": {
+            "nome": "Cigarro Rothmans Azul",
+            "preco": 12.00
+        }
+    }
+    
+]
