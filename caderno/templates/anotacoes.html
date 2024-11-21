@@ -11,105 +11,118 @@
         backdrop-filter: blur(5px);
         transition: all 0.3s ease-in-out;
     }
-
-    /* Estilo para a barra de rolagem do formulário */
-    .list-itens::-webkit-scrollbar {
-        width: 1px;
-        /* Largura mais fina */
-    }
 </style>
 
 <!-- Conteúdo da Página -->
 {% block content %}
 <!-- Conteúdo principal que ocupa o restante da tela -->
-<main class="max-h-full flex-grow bg-gray-100 flex items-start justify-center gap-8">
+<main class="max-h-full flex-grow bg-gray-100 flex items-start justify-center gap-8 flex-col lg:flex-row">
     <!-- Menu lateral à esquerda -->
-    <aside class="w-1/5 min-h-full bg-gray-100 px-4 pt-4 pb-6 ">
-        <h2 class="text-2xl font-bold mb-4 py-4 text-center shadow bg-gray-200">Clientes</h2>
-        <div class="flex justify-between px-8 text-sm">
-            <a href="{% url 'adicionar_cliente' %}" class="flex flex-row gap-2 p-2 rounded-lg">
+    <aside class="w-full sm:w-1/2 lg:w-1/5 min-h-full bg-gray-100 px-4 pt-4 pb-6">
+        <h2 class="text-xl sm:text-2xl font-bold mb-4 py-4 text-center shadow bg-gray-200">
+            Clientes
+        </h2>
+
+        <div class="flex flex-col sm:flex-row justify-between px-4 sm:px-8 text-sm mb-4">
+            <a href="{% url 'adicionar_cliente' %}"
+                class="flex flex-row gap-2 p-2 rounded-lg items-center justify-center bg-blue-100 hover:bg-blue-200">
                 <i class="fas fa-user-plus text-lg"></i>
                 <span class="font-semibold">Adicionar Cliente</span>
             </a>
-
-
-
         </div>
-        <div class="border p-5">
+
+        <div class="border p-3 sm:p-5 bg-white rounded-md shadow-md">
             <ul id="ul-client" class="divide-y divide-gray-300">
                 {% for cliente in clientes %}
-                <li class="py-3 flex items-center justify-between">
-                    <a href="{% url 'cliente_id' id=cliente.id %}"
-                        class="text-gray-500 hover:text-gray-700 flex-1 text-left">
+                <li class="py-3 flex flex-wrap sm:flex-nowrap items-center justify-between">
+                    <!-- Nome do cliente -->
+                    <a id="clienteSelecionado" href="{% url 'cliente_id' id=cliente.id %}"
+                        class="text-gray-500 hover:text-gray-700 flex-1 text-left truncate"
+                        data-cliente-selecionado="{{ cliente_selecionado|yesno:'true,false' }}">
                         {{ cliente.nome }}
                     </a>
+
+                    <!-- Botão de deletar -->
                     {% if cliente.id %}
                     <button onclick="mostrarModal('{% url 'deletar_cliente' cliente.id %}')"
-                        class="text-red-500 hover:text-red-700 flex items-center">
+                        class="text-red-500 hover:text-red-700 flex items-center ml-2">
                         <i class="fas fa-trash-alt text-sm"></i>
                     </button>
                     {% else %}
-                    <span class="text-gray-400 text-sm italic">Cliente sem ID válido!</span>
+                    <span class="text-gray-400 text-sm italic ml-2">Cliente sem ID válido!</span>
                     {% endif %}
                 </li>
                 {% endfor %}
             </ul>
         </div>
-
-
     </aside>
-    <!-- Seção principal com artigos -->
+
+    <!-- Tabela de Itens -->
     <section class="w-2/4 min-h-full">
         <div class="min-h-full mx-auto p-4">
-            <h2 class="text-2xl font-bold mb-4 shadow py-4 bg-gray-200 text-center border">Anotações de {{cliente.nome}}
+            <h2 class="text-2xl font-bold mb-4 shadow py-4 bg-gray-200 text-center border">
+                Anotações
+                {% if cliente_selecionado %}
+                <span>de {{ cliente.nome }}</span>
+                {% endif %}
             </h2>
 
+            <!-- Exibe mensagem de aviso oculta por padrão -->
+            <div id="mensagemDiv" class="bg-gray-100 text-gray-800 rounded flex justify-center items-center"
+                style="height: 25px;">
+                <span id="mensagemMsg" class="hidden">Selecione um cliente para &nbsp;<strong>adicionar</strong>&nbsp;
+                    itens.</span>
+            </div>
+
             <!-- Botões lado a lado com tamanho reduzido e texto curto -->
-            <div class=" flex justify-between px-4 space-x-4">
+            <div class="flex justify-between px-4 space-x-4 mt-2">
                 <!-- Botão de adicionar -->
-                <button id="addItemBtn" onclick="toggleModal()"
-                    class="bg-green-500 text-white px-4 py-2 text-sm rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
-                    <i class="fas fa-plus"></i>
-                    <span>Adicionar Item</span>
-                </button>
+                <div class="flex gap-4 justify-between items-center">
+                    <button id="addItemBtn" onclick="toggleModal()"
+                        class="bg-green-500 text-white px-4 py-2 text-sm rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                        <i class="fas fa-plus"></i>
+                        <span>Adicionar Item</span>
+                    </button>
+                </div>
 
                 <!-- Botão de deletar (abre a janela de confirmação) -->
+                {% if cliente_selecionado %}
+                {% if cliente_itens %}
                 <button id="deleteBtn"
-                    class="bg-red-500 text-white px-4 py-2 text-sm rounded-md hover:bg-red-600 transition duration-300 flex items-center space-x-2">
+                    class="bg-red-500 text-white px-4 py-2 text-sm rounded-md hover:bg-red-600 transition duration-300 flex items-center space-x-2"
+                    onclick="modalDeletarItem('open')">
                     <i class="fas fa-trash-alt"></i>
                     <span>Deletar</span>
                 </button>
+                {% endif %}
+                {% endif %}
             </div>
 
-
-            <!-- Tabela com scroll -->
-            <div class="container-table overflow-y-scroll mt-4" style="height: 55vh;">
-                <table class="bg-white rounded-lg w-full">
-                    <!-- Cabeçalho da tabela fixo -->
-                    <thead class="bg-gray-200 sticky z-30 shadow" style="top: 0px;">
+            <!-- Tabela de Itens -->
+            <div class="container-table overflow-y-auto mt-4" style="height: 55vh;">
+                <table id="tabela-clientes" class="bg-white rounded-lg w-full">
+                    <thead class="bg-gray-200 sticky z-0 shadow" style="top: 0px;">
                         <tr>
                             <th class="px-4 py-2 text-center" style="width: 5%;">
-                                <input type="checkbox" class="form-checkbox h-4 w-4">
+                                <input type="checkbox" class="form-checkbox h-4 w-4" id="checkbox-select-all">
                             </th>
-                            <th class="px-4 py-2 text-center" style="width: 40%;">Item</th>
-                            <th class="px-4 py-2 text-center" style="width: 0%;">Quantidade</th>
-                            <th class="px-4 py-2 text-center" style="width: 20%;">Preço</th>
-                            <th class="px-4 py-2 text-center" style="width: 40%;">Data de
-                                Aquisição
-                            </th>
+                            <th class="px-4 py-2 text-left" style="width: 30%;">Item</th>
+                            <th class="px-4 py-2 text-center" style="width: 20%;">Quantidade</th>
+                            <th class="px-4 py-2 text-left" style="width: 15%;">Preço</th>
+                            <th class="px-4 py-2 text-center" style="width: 30%;">Data de Aquisição</th>
                         </tr>
                     </thead>
 
-                    <!-- Corpo da tabela com rolagem -->
                     <tbody id="table-body" style="top: 0px;">
+                        {% if cliente_selecionado %}
                         {% for cliente_item in cliente_itens %}
                         <tr class="hover:bg-gray-100">
                             <td class="px-4 py-2 text-center">
-                                <input type="checkbox" class="form-checkbox h-4 w-4">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 item-checkbox">
                             </td>
-                            <td class="px-4 py-2 text-center">{{ cliente_item.item.nome }}</td>
+                            <td class="px-4 py-2 text-start">{{ cliente_item.item.nome }}</td>
                             <td class="px-4 py-2 text-center">{{ cliente_item.quantidade }}</td>
-                            <td class="px-4 py-2 text-center">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
+                            <td class="px-4 py-2 text-start">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
                             <td class="px-4 py-2 text-center">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
                             </td>
                         </tr>
@@ -119,35 +132,37 @@
                                 cliente.</td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Selecione um Cliente para exibir
+                                os <strong>Itens</strong></td>
+                        </tr>
+                        {% endif %}
                     </tbody>
 
-                    <!-- Rodapé da tabela fixo -->
-                    <tfoot class="bg-gray-200 sticky z-30 shadow" style="bottom: 0px;">
+                    <tfoot class="bg-gray-200 sticky z-0 shadow" style="bottom: 0px;">
                         <tr>
-                            <td colspan="4" class="px-4 py-2 font-bold text-center text-lg">
-                                Total
-                            </td>
-                            <td class="px-4 py-2 text-center text-lg font-bold">
-                                R$ {{ total|floatformat:2|default:"0.00" }}
-                            </td>
+                            <td colspan="4" class="px-4 py-2 font-bold text-center text-lg">Total</td>
+                            {% if cliente_selecionado %}
+                            <td class="px-4 py-2 text-center text-lg font-bold">R$ {{ total|floatformat:2|default:"0.00"
+                                }}</td>
+                            {% else %}
+                            <td class="px-4 py-2 text-center text-lg font-bold">R$ 0,00</td>
+                            {% endif %}
                         </tr>
                     </tfoot>
                 </table>
             </div>
 
-
-            <!-- Botão de confirmar pagamento -->
             <!-- Botões -->
             <div class="mt-8 flex justify-end space-x-4">
-                <!-- Botão de pagamento parcial -->
-                <button id="partialPaymentBtn"
+                <button id="partialPaymentBtn" onclick="togglePartialPaymentModal('open')"
                     class="bg-yellow-500 text-white px-4 py-2 text-xs rounded-md hover:bg-yellow-600 transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-hand-holding-usd"></i>
                     <span>Pagamento Parcial</span>
                 </button>
 
-                <!-- Botão de confirmar pagamento -->
-                <button id="confirmPaymentBtn"
+                <button id="confirmPaymentBtn" onclick="togglePaymentModal('open')"
                     class="bg-green-500 text-white px-4 py-2 text-xs rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-check-circle"></i>
                     <span>Confirmar Pagamento</span>
@@ -206,7 +221,6 @@
                 </div>
             </div>
 
-
             <!-- Modal de Pagamento Parcial -->
             <div id="partialPaymentModal"
                 class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden"
@@ -217,204 +231,78 @@
 
                     <!-- Formulário de pagamento parcial -->
                     <div class="space-y-4">
-                        <!-- Campo para o valor do pagamento parcial -->
-                        <div class="flex items-center space-x-3">
-                            <label for="partialAmount" class="text-lg">Valor do Pagamento:</label>
-                            <input type="number" id="partialAmount" class="w-32 p-2 border rounded"
-                                placeholder="R$ 0,00" min="1">
-                        </div>
+                        <label for="partialAmount" class="text-lg">Valor do Pagamento Parcial:</label>
+                        <input type="number" id="partialAmount" class="border px-4 py-2 rounded-md w-full" value="0">
 
-                        <!-- Opções de forma de pagamento -->
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="creditCard" name="paymentMethod"
-                                class="form-radio h-5 w-5 text-green-500">
-                            <label for="creditCard" class="text-lg">Cartão de Crédito</label>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="boleto" name="paymentMethod"
-                                class="form-radio h-5 w-5 text-blue-500">
-                            <label for="boleto" class="text-lg">Cartão de Débito</label>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="paypal" name="paymentMethod"
-                                class="form-radio h-5 w-5 text-yellow-500">
-                            <label for="paypal" class="text-lg">Dinheiro</label>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="radio" id="pix" name="paymentMethod"
-                                class="form-radio h-5 w-5 text-purple-500">
-                            <label for="pix" class="text-lg">Pix</label>
+                        <div class="mt-4">
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" id="creditCardPartial" name="paymentMethodPartial"
+                                    class="form-radio h-5 w-5 text-green-500" checked>
+                                <label for="creditCardPartial" class="text-lg">Cartão de Débito</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" id="boletoPartial" name="paymentMethodPartial"
+                                    class="form-radio h-5 w-5 text-blue-500">
+                                <label for="boletoPartial" class="text-lg">Cartão de Crédito</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" id="paypalPartial" name="paymentMethodPartial"
+                                    class="form-radio h-5 w-5 text-yellow-500">
+                                <label for="paypalPartial" class="text-lg">Dinheiro</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="radio" id="pixPartial" name="paymentMethodPartial"
+                                    class="form-radio h-5 w-5 text-purple-500">
+                                <label for="pixPartial" class="text-lg">Pix</label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Total a ser pago -->
                     <div class="mt-6 flex justify-between items-center">
-                        <span class="text-lg font-semibold">Total a Pagar:</span>
+                        <span class="text-lg font-semibold">Total do Pagamento:</span>
                         <span class="text-xl text-green-600">R$ 150,00</span>
                     </div>
 
                     <div class="flex justify-end space-x-4 mt-6">
-                        <!-- Botão de Cancelar -->
                         <button id="cancelPartialPaymentBtn"
                             class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">
                             Cancelar
                         </button>
-                        <!-- Botão de Confirmar Pagamento Parcial -->
                         <button id="submitPartialPaymentBtn"
-                            class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600">
+                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
                             Confirmar Pagamento Parcial
                         </button>
                     </div>
                 </div>
             </div>
-
-
-            <!-- Modal de Adicionar Itens -->
-
-            <div id="modalAdicionarItens"
-                class="fixed inset-0 z-50 hidden flex justify-center items-center bg-gray-500 bg-opacity-75">
-                <div class="flex flex-col justify-center bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-
-                    <h3 class="text-lg font-semibold mb-4 text-center">Adicionar Itens</h3>
-
-                    <!-- Exibe o nome do cliente selecionado -->
-                    <div class="flex justify-between">
-                        <div class="mb-4 text-center font-medium text-gray-700">
-                            Cliente: <span id="nomeCliente">{{ cliente.nome }}</span>
-                        </div>
-                        <div class="mb-4 text-center font-medium text-gray-700">
-                            Total: <span id="nomeTotal">R$ {{ total|floatformat:2|default:"0.00" }}</span>
-                        </div>
-                    </div>
-                    <!-- Campo de Pesquisa -->
-                    <div class="mb-2 px-1 border border-blue-500">
-                        <label for="itemSearch" class="text-gray-700">Pesquisar Itens:</label>
-                        <input type="text" id="itemSearch" onkeyup="filterItems()" placeholder="Pesquise os itens..."
-                            class="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <form id="list-itens" action="{% url 'adicionar_itens_cliente' %}" method="POST"
-                        class="list-itens container-table overflow-y-scroll" style="height: 55vh;">
-                        {% csrf_token %}
-
-                        <!-- Campo oculto para enviar o id do cliente -->
-                        <input type="hidden" id="clienteId" name="cliente" value="{{ cliente.id }}">
-
-                        <!-- Selecione os Itens -->
-                        <table class="min-w-full table-auto border-collapse">
-                            <thead class="bg-gray-200 sticky z-30 shadow" style="top: 0px;">
-                                <tr class="bg-gray-200">
-                                    <th class="px-4 py-2 text-left">Selecione os Itens</th>
-                                    <th class="px-4 py-2 text-left">Preço</th>
-                                    <th class="px-4 py-2 text-left">Quantidade</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-body" style="top: 0px;">
-                                {% for item in itens %}
-                                <tr class="border-b">
-                                    <td class="px-4 py-2">
-                                        <div class="flex items-center">
-                                            <input type="checkbox" id="item_{{ item.id }}" name="itens"
-                                                value="{{ item.id }}" class="mr-2">
-                                            <label for="item_{{ item.id }}" class="text-gray-700">{{ item.nome
-                                                }}</label>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-2 text-gray-700">R$ {{ item.preco }}</td>
-                                    <td class="px-4 py-2">
-                                        <input type="number" name="quantidade_{{ item.id }}"
-                                            id="quantidade_{{ item.id }}" value="1" min="1"
-                                            class="w-16 p-2 mt-1 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <!-- Botões -->
-                        <div class="mt-4 p-2 flex justify-end gap-4 bg-white sticky z-30 shadow" style="bottom: 0px;">
-                            <button type="button"
-                                class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow-md hover:bg-gray-300"
-                                onclick="toggleModal()">
-                                Cancelar
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600">
-                                Confirmar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-
-
-
-
-
-            <!-- Modal de confirmação para deletar o item -->
-            <div id="confirmationModal"
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
-                <div class="bg-white rounded-lg p-6 w-1/3">
-                    <h3 class="text-xl font-semibold mb-4">Confirmar Deletação</h3>
-                    <p class="mb-4">Tem certeza de que deseja deletar este item?</p>
-                    <div class="flex justify-end space-x-4">
-                        <button id="cancelBtn"
-                            class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">Cancelar</button>
-                        <button id="confirmDeleteBtn"
-                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de Confirmação de deletação do Cliente -->
-            <div id="modal-confirmacao"
-                class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-50">
-                <div class="bg-white rounded-lg shadow-lg p-6 w-96">
-                    <h2 class="text-lg font-bold text-gray-800 mb-4">Confirmar Exclusão</h2>
-                    <p class="text-gray-600 mb-6">Tem certeza de que deseja excluir este
-                        cliente?</p>
-                    <div class="flex justify-end gap-4">
-                        <button id="cancelar"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none">
-                            Cancelar
-                        </button>
-                        <form id="form-deletar" method="POST" action="">
-                            {% csrf_token %}
-                            <button type="submit"
-                                class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none">
-                                Confirmar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </section>
-    <section class="w-1/5 min-h-full pb-4 px-6 shadow-lg rounded-lg bg-white">
+
+    <!-- Observações -->
+    <section class="w-1/5 min-h-full pb-4 px-6">
         <div class="min-h-full mx-auto py-4">
             <h2 class="text-2xl font-bold mb-4 py-4 bg-gray-200 text-center rounded border-b border-gray-300">
                 Observações
             </h2>
         </div>
-        <div class="p-6 shadow-md min-h-full bg-gray-100 rounded-lg mb-4" style="max-height: 400px; height: 200px;">
-            <textarea
-                id="observacoesTextarea"
-                class="w-full  h-auto p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Adicione suas observações aqui..."
-                style="height: 50px;"
-                oninput="autoResize(this)"
-            ></textarea>
+
+        <div class="p-6 shadow-md min-h-full bg-gray-100 rounded-lg mb-4" style="max-height: 100%; height: 100%;">
+            <textarea id="observacoesTextarea"
+                class="w-full h-auto p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Adicione suas observações aqui..." style="height: 50px; overflow: hidden;"
+                oninput="autoResize(this)">
+        </textarea>
         </div>
-        <div class="flex justify-between mt-6">
+
+        <div class="flex justify-between mt-6 space-x-4">
             <!-- Botão de adicionar Observações -->
             <button id="addItemBtn"
                 class="bg-green-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                 <i class="fas fa-plus"></i>
                 <span>Adicionar</span>
             </button>
-            <!-- Botão de deletar (abre a janela de confirmação) -->
+
+            <!-- Botão de deletar Observações -->
             <button id="deleteBtn"
                 class="bg-red-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-red-600 transition duration-300 flex items-center space-x-2">
                 <i class="fas fa-trash-alt"></i>
@@ -447,9 +335,45 @@
 
     // Função Abrir Modal Adicionar Item
     function toggleModal() {
-        const modal = document.getElementById('modalAdicionarItens');
-        modal.classList.toggle('hidden');
+        const modal = document.querySelector('#modalAdicionarItens');
+        const tableAddItems = document.getElementById('table-add-items');
+        if (modal) {
+            modal.classList.toggle('hidden');
+        } else {
+            console.error('Elemento modalAdicionarItens não encontrado!');
+            exibirMensagem()
+        }
+        console.log(tableAddItems);
     }
+
+    // Função para abrir ou fechar o modal de confirmação de Deletar Item
+    function modalDeletarItem(action = 'toggle') {
+        const modalDeletarItem = document.getElementById('modalDeletarItem');
+        if (!modalDeletarItem) {
+            console.error('Modal não encontrado!');
+            return;
+        }
+
+        if (action === 'open') {
+            modalDeletarItem.classList.remove('hidden');
+        } else if (action === 'close') {
+            modalDeletarItem.classList.add('hidden');
+        } else {
+            modalDeletarItem.classList.toggle('hidden');
+        }
+    }
+
+    // Adicionar evento para o botão "Cancelar"
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+        modalDeletarItem('close');
+    });
+
+    // Exemplo de uso no botão "Confirmar" (pode ser modificado para enviar uma requisição POST, por exemplo)
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        console.log('Item confirmado para deletar!');
+        modalDeletarItem('close');
+    });
+
 
     // Função Fechar Modal Adicionar Clientes quando não há Clientes.
     function closeErrorModal() {
@@ -459,21 +383,34 @@
         }
     }
 
-    // Função para Filtrar os Itens
+    // Função para Filtrar os Itens no Modal Adicionar Itens
     function filterItems() {
-        let input = document.getElementById('itemSearch');
-        let filter = input.value.toUpperCase();
-        let rows = document.querySelectorAll('.item-row');
+        const searchQuery = document.getElementById('itemSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('#table-body tr');  // Seleciona todas as linhas da tabela
 
+        // Itera sobre todas as linhas da tabela
         rows.forEach(function (row) {
-            let itemName = row.querySelector('label').textContent || row.querySelector('label').innerText;
-            if (itemName.toUpperCase().indexOf(filter) > -1) {
-                row.style.display = "";
+            const itemName = row.querySelector('td label');  // Seleciona o nome do item na linha
+
+            // Verifica se o itemName foi encontrado (não é null)
+            if (itemName) {
+                const itemText = itemName.innerText.toLowerCase();  // Obtém o nome do item em minúsculas
+
+                // Se o nome do item contém o texto da pesquisa, exibe a linha; caso contrário, oculta
+                if (itemText.includes(searchQuery)) {
+                    row.style.display = '';  // Exibe a linha
+                } else {
+                    row.style.display = 'none';  // Oculta a linha
+                }
             } else {
-                row.style.display = "none";
+                // Se o itemName não foi encontrado, podemos esconder a linha
+                row.style.display = 'none';
             }
         });
     }
+
+
+
 
     // Função para ajustar a altura do textarea conforme o conteúdo
     function autoResize(element) {
@@ -481,6 +418,101 @@
         element.style.height = 'auto'; // Reseta a altura antes de medir
         element.style.height = (element.scrollHeight > maxHeight ? maxHeight : element.scrollHeight) + 'px'; // Limita a altura e ativa o scroll
     }
+
+
+
+    // Função para selecionar todos os itens quando eu selecionar o checkbox da 'th'
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleciona a tabela pelo ID
+        const table = document.querySelector('#tabela-clientes');
+        if (!table) return; // Garante que o script não falhe se a tabela não estiver presente
+
+        // Seleciona o checkbox "selecionar todos" dentro dessa tabela
+        const selectAllCheckbox = table.querySelector('thead input[type="checkbox"]');
+
+        // Seleciona todos os checkboxes dos itens dessa tabela
+        const itemCheckboxes = table.querySelectorAll('tbody input[type="checkbox"].item-checkbox');
+
+        // Evento para selecionar ou desmarcar todos os checkboxes
+        selectAllCheckbox.addEventListener('change', function () {
+            const isChecked = selectAllCheckbox.checked;
+            itemCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Evento para sincronizar o estado do checkbox do cabeçalho com os checkboxes dos itens
+        itemCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                if (!checkbox.checked) {
+                    selectAllCheckbox.checked = false;
+                } else if ([...itemCheckboxes].every(cb => cb.checked)) {
+                    selectAllCheckbox.checked = true;
+                }
+            });
+        });
+    });
+
+    // Função para exibir a mensagem de alerta quando eu tentar adicionar itens sem ter selecionado o cliente
+    function exibirMensagem() {
+        // Acessa o valor de cliente_selecionado no HTML (true ou false)
+        const clienteSelecionado = document.getElementById('clienteSelecionado').getAttribute('data-cliente-selecionado');
+        const mensagemDiv = document.getElementById('mensagemDiv');
+        const mensagemMsg = document.getElementById('mensagemMsg');
+
+        // Verifique se clienteSelecionado é "false"
+        if (clienteSelecionado === 'false') {
+            mensagemMsg.classList.remove('hidden');
+            mensagemDiv.classList.remove('bg-gray-100');
+            mensagemDiv.classList.add('bg-red-100');
+        }
+        console.log(clienteSelecionado);
+    };
+
+    // Função para abrir ou fechar o modal de pagamento
+    function togglePaymentModal(action = 'toggle') {
+        const paymentModal = document.getElementById('paymentConfirmationModal');
+        if (!paymentModal) {
+            console.error('Modal de pagamento não encontrado!');
+            return;
+        }
+
+        if (action === 'open') {
+            paymentModal.classList.remove('hidden');
+        } else if (action === 'close') {
+            paymentModal.classList.add('hidden');
+        } else {
+            paymentModal.classList.toggle('hidden');
+        }
+    }
+
+    // Adicionar evento ao botão de "Cancelar"
+    document.getElementById('cancelPaymentBtn').addEventListener('click', () => {
+        togglePaymentModal('close');
+    });
+
+    // Função para abrir ou fechar o modal de pagamento parcial
+    function togglePartialPaymentModal(action = 'toggle') {
+        const partialPaymentModal = document.getElementById('partialPaymentModal');
+        if (!partialPaymentModal) {
+            console.error('Modal de pagamento parcial não encontrado!');
+            return;
+        }
+
+        if (action === 'open') {
+            partialPaymentModal.classList.remove('hidden');
+        } else if (action === 'close') {
+            partialPaymentModal.classList.add('hidden');
+        } else {
+            partialPaymentModal.classList.toggle('hidden');
+        }
+    }
+
+    // Adicionar evento ao botão de "Cancelar"
+    document.getElementById('cancelPartialPaymentBtn').addEventListener('click', () => {
+        togglePartialPaymentModal('close');
+    });
+
 
 </script>
 {% endblock %}

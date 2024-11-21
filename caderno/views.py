@@ -1,39 +1,67 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, F
 from .models import *
+from django.http import JsonResponse
 
-# View Anotações -------------------------------------------/
+# Adicionar os itens do cliente
+def adicionar_itens_cliente(request):
+    if request.method == "POST":
+        cliente_id = request.POST.get("cliente")
+        itens_selecionados = request.POST.getlist("itens")
+        if not cliente_id or not itens_selecionados:
+            return redirect('anotacoes')
+        cliente = get_object_or_404(Cliente, id=cliente_id)
+        for item_id in itens_selecionados:
+            quantidade = int(request.POST.get(f"quantidade_{item_id}", 1))
+            item = get_object_or_404(Item, id=item_id)
+            ClienteItem.objects.create(cliente=cliente, item=item, quantidade=quantidade)
+        return redirect('cliente_id', id=cliente.id)
+    return redirect('anotacoes')
+
+# Deletar os itens do cliente
+def deletar_item_cliente(request, cliente_id, item_id):
+    if request.method == "POST":
+        # Verificar se o cliente e o item existem
+        cliente = get_object_or_404(Cliente, id=cliente_id)
+        cliente_item = get_object_or_404(ClienteItem, cliente=cliente, item_id=item_id)
+
+        # Deletar o item
+        cliente_item.delete()
+
+        # Retornar resposta JSON ou redirecionar para a página do cliente
+        return JsonResponse({'status': 'success', 'message': 'Item deletado com sucesso'})
+    
+    # Se o método não for POST, redirecionar para a página do cliente
+    return redirect('cliente_id', id=cliente_id)
+
+# Lista de Clientes e Itens (Página Principal)
 def anotacoes(request, id=None):
-    # Verifica se há clientes cadastrados
     if not Cliente.objects.exists():
         return redirect('adicionar_cliente')
-    
     itens = Item.objects.all()
     clientes = Cliente.objects.all()
-
     if id:
         cliente = get_object_or_404(Cliente, id=id)
         cliente_itens = ClienteItem.objects.filter(cliente=cliente).select_related('item')
+        cliente_selecionado = True
     else:
         cliente = None
-        cliente_itens = ClienteItem.objects.all().select_related('cliente', 'item')
-
-    # Calcular o total dos itens (preço * quantidade)
+        cliente_itens = []
+        cliente_selecionado = False
     total = sum(cliente_item.item.preco * cliente_item.quantidade for cliente_item in cliente_itens)
-
-    # Passar os dados para o template
     context = {
         'clientes': clientes,
         'itens': itens,
         'cliente_itens': cliente_itens,
         'total': total,
         'cliente': cliente,
+        'cliente_selecionado': cliente_selecionado,
     }
     return render(request, 'anotacoes.html', context)
 
 
 
-# View Adicionar Cliente -------------------------------------------/
+# Adicionar Cliente 
 def adicionar_cliente(request):
     estados = [
         {"sigla": "AC", "nome": "Acre"},
@@ -66,7 +94,6 @@ def adicionar_cliente(request):
     ]
     estado_padrao = "PA"
     cidade_padrao = "Canaã dos Carajás"
-
     if request.method == 'POST':
         nome = request.POST.get('nome')
         contato = request.POST.get('contato')
@@ -76,7 +103,6 @@ def adicionar_cliente(request):
         bairro = request.POST.get('bairro')
         cidade = request.POST.get('cidade')
         estado = request.POST.get('estado')
-
         if Cliente.objects.filter(nome=nome).exists():
             return render(request, 'adicionar_cliente.html', {
                 'estados': estados,
@@ -84,7 +110,6 @@ def adicionar_cliente(request):
                 'cidade_padrao': cidade_padrao,
                 'erro': f"Um cliente com o nome '{nome}' já existe."
             })
-
         endereco = Endereco(
             rua=rua,
             numero=numero,
@@ -94,14 +119,12 @@ def adicionar_cliente(request):
             estado=estado,
         )
         endereco.save()
-
         cliente = Cliente(
             nome=nome,
             contato=contato,
             endereco=endereco
         )
         cliente.save()
-        
         return redirect('anotacoes')
     return render(request, 'adicionar_cliente.html', {
         'estados': estados,
@@ -110,34 +133,29 @@ def adicionar_cliente(request):
     })
 
 
-# View Deletar Cliente -------------------------------------------------------------/
+# Deletar Cliente
 def deletar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     cliente.delete()
     return redirect('anotacoes')
 
 
-# View Histórico -------------------------------------------------------------------/
+# Histórico 
 def historico(request):
     cliente_id = request.GET.get('cliente_id')
-
     if cliente_id:
-        historico = HistoricoCliente.objects.filter(cliente__cliente__id=cliente_id)
+        historico = HistoricoCliente.objects.filter(cliente__id=cliente_id)
     else:
         historico = HistoricoCliente.objects.all()
-
     total = historico.aggregate(
-        total=Sum(F('cliente__quantidade') * F('cliente__item__preco'))
+        total=Sum(F('item__preco') * F('cliente__clienteitem__quantidade'))
     )['total'] or 0
-
     clientes_unicos = Cliente.objects.all()
-
     context = {
         'historico': historico,
         'clientes_unicos': clientes_unicos,
         'total': total,
     }
-
     return render(request, 'historico.html', context)
 
 

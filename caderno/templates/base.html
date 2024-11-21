@@ -15,6 +15,13 @@
     <!-- style -->
     <link rel="stylesheet" href="{% static 'css/base/base.css' %}">
     {% block style %}{% endblock %}
+    <style>
+        body {
+            display: grid;
+            grid-template-rows: .1fr .1fr auto;
+        }
+    </style>
+    {% block scriptHead %}{% endblock %}
 </head>
 
 <body class="h-screen bg-gray-800">

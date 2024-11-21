@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Itens</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Campo de Pesquisa -->
+    <div class="search-container">
+        <input type="text" id="itemSearch" onkeyup="filterItems()" placeholder="Pesquise os itens...">
+    </div>
+
+    <!-- Tabela de Itens -->
+    <table id="itemsTable">
+        <thead>
+            <tr>
+                <th>Selecione os Itens</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <tr>
+                <td>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="item_1" name="itens" value="1" class="mr-2">
+                        <label for="item_1" class="text-gray-700">Item A</label>
+                    </div>
+                </td>
+                <td>R$ 10,00</td>
+                <td>
+                    <input type="number" name="quantidade_1" id="quantidade_1" value="1" min="1" class="w-16 p-2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="item_2" name="itens" value="2" class="mr-2">
+                        <label for="item_2" class="text-gray-700">Item B</label>
+                    </div>
+                </td>
+                <td>R$ 15,00</td>
+                <td>
+                    <input type="number" name="quantidade_2" id="quantidade_2" value="1" min="1" class="w-16 p-2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="item_3" name="itens" value="3" class="mr-2">
+                        <label for="item_3" class="text-gray-700">Item C</label>
+                    </div>
+                </td>
+                <td>R$ 20,00</td>
+                <td>
+                    <input type="number" name="quantidade_3" id="quantidade_3" value="1" min="1" class="w-16 p-2">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="item_4" name="itens" value="4" class="mr-2">
+                        <label for="item_4" class="text-gray-700">Item D</label>
+                    </div>
+                </td>
+                <td>R$ 25,00</td>
+                <td>
+                    <input type="number" name="quantidade_4" id="quantidade_4" value="1" min="1" class="w-16 p-2">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        // Função para filtrar os itens da tabela com base no que é digitado no campo de pesquisa
+        function filterItems() {
+            const searchQuery = document.getElementById('itemSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#table-body tr');  // Seleciona todas as linhas da tabela
+            
+            // Itera sobre todas as linhas da tabela
+            rows.forEach(function(row) {
+                const itemName = row.querySelector('td label');  // Seleciona o nome do item na linha
+                if (itemName) {
+                    const itemText = itemName.innerText.toLowerCase();  // Obtém o nome do item em minúsculas
+
+                    // Se o nome do item contém o texto da pesquisa, exibe a linha; caso contrário, oculta
+                    if (itemText.includes(searchQuery)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
