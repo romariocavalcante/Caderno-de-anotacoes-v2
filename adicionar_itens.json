@@ -3,7 +3,7 @@
         "model": "caderno.Item",
         "pk": 1,
         "fields": {
-            "nome": "Água C Gás 500ml",
+            "nome": "Agua C Gas 500ml",
             "preco": 4.00
         }
     },
@@ -11,7 +11,7 @@
         "model": "caderno.Item",
         "pk": 2,
         "fields": {
-            "nome": "Água de Coco",
+            "nome": "Agua de Coco",
             "preco": 5.00
         }
     },
@@ -19,7 +19,7 @@
         "model": "caderno.Item",
         "pk": 3,
         "fields": {
-            "nome": "Água Mineral 1,5L",
+            "nome": "Agua Mineral 1,5L",
             "preco": 8.00
         }
     },
@@ -27,7 +27,7 @@
         "model": "caderno.Item",
         "pk": 4,
         "fields": {
-            "nome": "Água Mineral Galão",
+            "nome": "Agua Mineral Galao",
             "preco": 17.50
         }
     },
@@ -35,7 +35,7 @@
         "model": "caderno.Item",
         "pk": 5,
         "fields": {
-            "nome": "Água S Gás 500ml",
+            "nome": "Agua S Gas 500ml",
             "preco": 3.00
         }
     },
@@ -43,7 +43,7 @@
         "model": "caderno.Item",
         "pk": 6,
         "fields": {
-            "nome": "Amstel Caixa",
+            "nome": "Amstel (Caixa 12un)",
             "preco": 45.00
         }
     },
@@ -59,7 +59,7 @@
         "model": "caderno.Item",
         "pk": 8,
         "fields": {
-            "nome": "Antárctica Original 269ml",
+            "nome": "Antarctica Original 269ml",
             "preco": 5.00
         }
     },
@@ -67,7 +67,7 @@
         "model": "caderno.Item",
         "pk": 9,
         "fields": {
-            "nome": "Antárctica Original Garrafa 600ml",
+            "nome": "Antarctica Original Garrafa 600ml",
             "preco": 13.00
         }
     },
@@ -75,7 +75,7 @@
         "model": "caderno.Item",
         "pk": 10,
         "fields": {
-            "nome": "Antárctica Original Lata 350ml",
+            "nome": "Antarctica Original Lata 350ml",
             "preco": 5.00
         }
     },
@@ -83,7 +83,7 @@
         "model": "caderno.Item",
         "pk": 11,
         "fields": {
-            "nome": "Antárctica Pilsen Lata 269ml",
+            "nome": "Antarctica Pilsen Lata 269ml",
             "preco": 5.00
         }
     },
@@ -230,6 +230,374 @@
             "nome": "Cigarro Rothmans Azul",
             "preco": 12.00
         }
-    }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 30,
+        "fields": {
+            "nome": "Cigarro Rothmans Cereja",
+            "preco": 14.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 31,
+        "fields": {
+            "nome": "Cigarro Rothmans Melancia",
+            "preco": 14.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 32,
+        "fields": {
+            "nome": "Cigarro Rothmans Vermelho",
+            "preco": 14.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 33,
+        "fields": {
+            "nome": "Cigarro San Marino",
+            "preco": 8.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 34,
+        "fields": {
+            "nome": "Coca-Cola KS",
+            "preco": 6.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 35,
+        "fields": {
+            "nome": "Coca-Cola 2L",
+            "preco": 13.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 36,
+        "fields": {
+            "nome": "Coca-Cola 600ml",
+            "preco": 6.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 37,
+        "fields": {
+            "nome": "Coca-Cola Lata 350ml",
+            "preco": 5.00
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": 38,
+        "fields": {
+            "nome": "Corona Extra Lata 350ml (Caixa)",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
+    {
+        "model": "caderno.Item",
+        "pk": ,
+        "fields": {
+            "nome": "",
+            "preco": 
+        }
+    },
     
 ]
