@@ -1,0 +1,51 @@
+<!-- Extende do Template Base -->
+{% extends 'base.html' %}
+<!-- Carrega os arquivos Estáticos CSS, JS, Entre outros.... -->
+{% load static %}
+
+<!-- Styles -->
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/anotacoes/anotacoes.css' %}">
+{% endblock %}
+
+<!-- Conteúdo da Página -->
+{% block content %}
+<!-- Conteúdo principal -->
+<main class=" px-4">
+    <!-- Container Principal -->
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        <!-- Header do Perfil -->
+        <div class="flex items-center space-x-6 border-b pb-6">
+            <!-- Foto do Perfil -->
+            <img 
+                class="w-32 h-32 rounded-full border-4 border-gray-300 object-cover" 
+                src="{% static 'images/profile-placeholder.png' %}" 
+                alt="Foto do Cliente">
+            <!-- Dados Básicos -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">{{ cliente.nome }}</h2>
+                <p class="text-gray-600">Email: {{ cliente.email }}</p>
+                <p class="text-gray-600">Telefone: {{ cliente.telefone }}</p>
+                <p class="text-gray-600">Endereço: {{ cliente.endereco }}</p>
+            </div>
+        </div>
+
+        <!-- Conteúdo Adicional -->
+        <div class="mt-6">
+            <h3 class="text-xl font-semibold text-gray-800">Detalhes Adicionais</h3>
+            <div class="mt-4 space-y-2">
+                <p class="text-gray-600"><span class="font-medium">CPF:</span> {{ cliente.cpf }}</p>
+                <p class="text-gray-600"><span class="font-medium">Data de Cadastro:</span> {{ cliente.data_cadastro }}</p>
+                <p class="text-gray-600"><span class="font-medium">Observações:</span> {{ cliente.observacoes }}</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+<!-- Scripts -->
+{% block scripts %}
+<script>
+    console.log('Página de perfil carregada com Tailwind CSS!');
+</script>
+{% endblock %}

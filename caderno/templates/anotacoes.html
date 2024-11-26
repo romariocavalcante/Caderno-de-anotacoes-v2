@@ -16,51 +16,13 @@
 <!-- Conteúdo da Página -->
 {% block content %}
 <!-- Conteúdo principal que ocupa o restante da tela -->
-<main class="max-h-full flex-grow bg-gray-100 flex items-start justify-center gap-8 flex-col lg:flex-row">
-    <!-- Menu lateral à esquerda -->
-    <aside class="w-full sm:w-1/2 lg:w-1/5 min-h-full bg-gray-100 px-4 pt-4 pb-6">
-        <h2 class="text-xl sm:text-2xl font-bold mb-4 py-4 text-center shadow bg-gray-200">
-            Clientes
-        </h2>
+<main class="grid grid-rows-1 px-4">
 
-        <div class="flex flex-col sm:flex-row justify-between px-4 sm:px-8 text-sm mb-4">
-            <a href="{% url 'adicionar_cliente' %}"
-                class="flex flex-row gap-2 p-2 rounded-lg items-center justify-center bg-blue-100 hover:bg-blue-200">
-                <i class="fas fa-user-plus text-lg"></i>
-                <span class="font-semibold">Adicionar Cliente</span>
-            </a>
-        </div>
-
-        <div class="border p-3 sm:p-5 bg-white rounded-md shadow-md">
-            <ul id="ul-client" class="divide-y divide-gray-300">
-                {% for cliente in clientes %}
-                <li class="py-3 flex flex-wrap sm:flex-nowrap items-center justify-between">
-                    <!-- Nome do cliente -->
-                    <a id="clienteSelecionado" href="{% url 'cliente_id' id=cliente.id %}"
-                        class="text-gray-500 hover:text-gray-700 flex-1 text-left truncate"
-                        data-cliente-selecionado="{{ cliente_selecionado|yesno:'true,false' }}">
-                        {{ cliente.nome }}
-                    </a>
-
-                    <!-- Botão de deletar -->
-                    {% if cliente.id %}
-                    <button onclick="mostrarModal('{% url 'deletar_cliente' cliente.id %}')"
-                        class="text-red-500 hover:text-red-700 flex items-center ml-2">
-                        <i class="fas fa-trash-alt text-sm"></i>
-                    </button>
-                    {% else %}
-                    <span class="text-gray-400 text-sm italic ml-2">Cliente sem ID válido!</span>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </aside>
 
     <!-- Tabela de Itens -->
-    <section class="w-2/4 min-h-full">
-        <div class="min-h-full mx-auto p-4">
-            <h2 class="text-2xl font-bold mb-4 shadow py-4 bg-gray-200 text-center border">
+    <section class="w-full">
+        <div class="">
+            <h2 class="text-sm font-bold my-3 px-6 py-1 text-start border-b">
                 Anotações
                 {% if cliente_selecionado %}
                 <span>de {{ cliente.nome }}</span>
@@ -68,18 +30,18 @@
             </h2>
 
             <!-- Exibe mensagem de aviso oculta por padrão -->
-            <div id="mensagemDiv" class="bg-gray-100 text-gray-800 rounded flex justify-center items-center"
+            <div id="mensagemDiv" class="bg-gray-100 text-gray-800 my-1 flex justify-center items-center"
                 style="height: 25px;">
                 <span id="mensagemMsg" class="hidden">Selecione um cliente para &nbsp;<strong>adicionar</strong>&nbsp;
                     itens.</span>
             </div>
 
             <!-- Botões lado a lado com tamanho reduzido e texto curto -->
-            <div class="flex justify-between px-4 space-x-4 mt-2">
+            <div class="flex justify-between">
                 <!-- Botão de adicionar -->
-                <div class="flex gap-4 justify-between items-center">
+                <div class="flex justify-between items-center">
                     <button id="addItemBtn" onclick="toggleModal()"
-                        class="bg-green-500 text-white px-4 py-2 text-sm rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                        class="bg-green-500 text-white px-2 py-1 text-sm hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                         <i class="fas fa-plus"></i>
                         <span>Adicionar Item</span>
                     </button>
@@ -89,7 +51,7 @@
                 {% if cliente_selecionado %}
                 {% if cliente_itens %}
                 <button id="deleteBtn"
-                    class="bg-red-500 text-white px-4 py-2 text-sm rounded-md hover:bg-red-600 transition duration-300 flex items-center space-x-2"
+                    class="bg-red-500 text-white px-2 py-1 text-sm hover:bg-red-600 transition duration-300 flex items-center space-x-2"
                     onclick="modalDeletarItem('open')">
                     <i class="fas fa-trash-alt"></i>
                     <span>Deletar</span>
@@ -99,31 +61,31 @@
             </div>
 
             <!-- Tabela de Itens -->
-            <div class="container-table overflow-y-auto mt-4" style="height: 55vh;">
-                <table id="tabela-clientes" class="bg-white rounded-lg w-full">
-                    <thead class="bg-gray-200 sticky z-0 shadow" style="top: 0px;">
+            <div class="container-table overflow-y-auto mt-1 bg-white">
+                <table id="tabela-clientes" class="bg-white w-full text-xs">
+                    <thead class="bg-gray-200 sticky z-0" style="top: 0px;">
                         <tr>
-                            <th class="px-4 py-2 text-center" style="width: 5%;">
+                            <th id="table-th" class="text-center">
                                 <input type="checkbox" class="form-checkbox h-4 w-4" id="checkbox-select-all">
                             </th>
-                            <th class="px-4 py-2 text-left" style="width: 30%;">Item</th>
-                            <th class="px-4 py-2 text-center" style="width: 20%;">Quantidade</th>
-                            <th class="px-4 py-2 text-left" style="width: 15%;">Preço</th>
-                            <th class="px-4 py-2 text-center" style="width: 30%;">Data de Aquisição</th>
+                            <th id="table-th" class=" text-left">Item</th>
+                            <th id="table-th" class=" text-center">Qtd</th>
+                            <th id="table-th" class=" text-left">Preço</th>
+                            <th id="table-th" class=" text-center">Data de Aquisição</th>
                         </tr>
                     </thead>
 
                     <tbody id="table-body" style="top: 0px;">
                         {% if cliente_selecionado %}
                         {% for cliente_item in cliente_itens %}
-                        <tr class="hover:bg-gray-100">
-                            <td class="px-4 py-2 text-center">
+                        <tr class="hover:bg-gray-100" data-item-id="{{ cliente_item.id }}">
+                            <td id class="text-center">
                                 <input type="checkbox" class="form-checkbox h-4 w-4 item-checkbox">
                             </td>
-                            <td class="px-4 py-2 text-start">{{ cliente_item.item.nome }}</td>
-                            <td class="px-4 py-2 text-center">{{ cliente_item.quantidade }}</td>
-                            <td class="px-4 py-2 text-start">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
-                            <td class="px-4 py-2 text-center">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
+                            <td class="text-start">{{ cliente_item.item.nome }}</td>
+                            <td class="text-center">{{ cliente_item.quantidade }}</td>
+                            <td class="text-start">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
+                            <td class="text-center">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
                             </td>
                         </tr>
                         {% empty %}
@@ -140,11 +102,12 @@
                         {% endif %}
                     </tbody>
 
-                    <tfoot class="bg-gray-200 sticky z-0 shadow" style="bottom: 0px;">
+                    <tfoot class="border sticky z-0" style="bottom: 0px;">
                         <tr>
-                            <td colspan="4" class="px-4 py-2 font-bold text-center text-lg">Total</td>
+                            <td colspan="4" class="font-bold text-right text-base">Total</td>
                             {% if cliente_selecionado %}
-                            <td class="px-4 py-2 text-center text-lg font-bold">R$ {{total|floatformat:2|default:"0.00"}}</td>
+                            <td class="px-4 py-2 text-center text-lg font-bold">R$
+                                {{total|floatformat:2|default:"0.00"}}</td>
                             {% else %}
                             <td class="px-4 py-2 text-center text-lg font-bold">R$ 0,00</td>
                             {% endif %}
@@ -175,16 +138,16 @@
             {% if cliente_selecionado %}
             <div id="modalAdicionarItens"
                 class="fixed inset-0 z-50 hidden flex justify-center items-center bg-gray-500 bg-opacity-75">
-                <div class="flex flex-col justify-center bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+                <div class="flex flex-col justify-center bg-white p-6  w-full max-w-2xl">
 
-                    <h3 class="text-lg font-semibold mb-4 text-center">Adicionar Itens</h3>
+                    <h3 class="text-base font-semibold mb-4 text-center">Adicionar Itens</h3>
 
                     <!-- Exibe o nome do cliente selecionado -->
                     <div class="flex justify-between">
-                        <div class="mb-4 text-center font-medium text-gray-700">
+                        <div class="mb-4 text-center font-medium text-sm text-gray-700">
                             Cliente: <span id="nomeCliente">{{ cliente.nome }}</span>
                         </div>
-                        <div class="mb-4 text-center font-medium text-gray-700">
+                        <div class="mb-4 text-center font-medium text-sm text-gray-700">
                             Total: <span id="nomeTotal">R$ {{ total|floatformat:2|default:"0.00" }}</span>
                         </div>
                     </div>
@@ -193,9 +156,11 @@
 
 
                     <!-- Campo de Pesquisa -->
-                    <div class="mb-2 px-1">
+                    <div class="mb-2">
                         <input type="text" id="itemSearch" onkeyup="filterItems()" placeholder="Pesquise os itens..."
-                            class="mt-1 w-full border border-gray-800 px-4 py-2 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            class="mt-1 w-full px-4 py-2 border border-gray-300 focus:ring-blue-300 focus:border-blue-500 focus:rounded-none">
+
+
                     </div>
 
 
@@ -255,28 +220,22 @@
             </div>
             {% endif %}
 
-            <!-- Modal de confirmação para deletar o item -->
-            <div id="modalDeletarItem"
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden"
-                style="z-index: 2;">
-                <div class="bg-white rounded-lg p-6 w-1/3">
-                    <h3 class="text-xl font-semibold mb-4">Confirmar Deletação</h3>
-                    <p class="mb-4">Tem certeza de que deseja deletar este item?</p>
-                    <div class="flex justify-end space-x-4">
-                        <!-- Botão para cancelar a ação -->
-                        <button id="cancelBtn" class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">
-                            Cancelar
-                        </button>
-                        <!-- Botão para confirmar a exclusão -->
+            <div id="modalDeletar"
+                class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-1/3">
+                    <h2 class="text-lg font-semibold text-gray-800">Confirmar Exclusão</h2>
+                    <p class="text-gray-600 mt-2">Tem certeza de que deseja excluir os itens selecionados?</p>
+                    <div class="flex justify-end space-x-3 mt-4">
+                        <button id="cancelBtn" onclick="modalDeletarItem('close')"
+                            class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Cancelar</button>
                         <button id="confirmDeleteBtn"
-                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
-                            Confirmar
-                        </button>
+                            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Deletar</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal de Confirmação de deletação do Cliente -->
+
+            <!-- Modal Deletar Cliente -->
             <div id="modal-confirmacao"
                 class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden"
                 style="z-index: 0;">
@@ -410,32 +369,31 @@
     </section>
 
     <!-- Observações -->
-    <section class="w-1/5 min-h-full pb-4 px-6">
-        <div class="min-h-full mx-auto py-4">
-            <h2 class="text-2xl font-bold mb-4 py-4 bg-gray-200 text-center rounded border-b border-gray-300">
+    <section class="w-full">
+        <div class="">
+            <h2 class="text-base font-bold bg-gray-200 text-center">
                 Observações
             </h2>
         </div>
 
-        <div class="p-6 shadow-md min-h-full bg-gray-100 rounded-lg mb-4" style="max-height: 100%; height: 100%;">
+        <div class="bg-gray-100">
             <textarea id="observacoesTextarea"
-                class="w-full h-auto p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Adicione suas observações aqui..." style="height: 50px; overflow: hidden;"
-                oninput="autoResize(this)">
-        </textarea>
+                class="w-full text-left py-5 px-4 resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
+                style="height: 20%; text-indent: 0;" placeholder="Adicione suas observações aqui...">
+            </textarea>
         </div>
 
         <div class="flex justify-between mt-6 space-x-4">
             <!-- Botão de adicionar Observações -->
             <button id="addItemBtn"
-                class="bg-green-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                class="bg-green-500 text-white text-xs py-1 px-2 hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                 <i class="fas fa-plus"></i>
-                <span>Adicionar</span>
+                <span>Salvar</span>
             </button>
 
             <!-- Botão de deletar Observações -->
             <button id="deleteBtn"
-                class="bg-red-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-red-600 transition duration-300 flex items-center space-x-2">
+                class="bg-red-500 text-white text-xs py-1 px-2 hover:bg-red-600 transition duration-300 flex items-center space-x-2">
                 <i class="fas fa-trash-alt"></i>
                 <span>Deletar</span>
             </button>
@@ -448,7 +406,7 @@
 <!-- Scripts -->
 {% block scripts %}
 <script>
-    // Mostrar Modal de Confirmação de Deletação do Cliente
+    // Modal Deletar Cliente
     function mostrarModal(url) {
         const modal = document.getElementById('modal-confirmacao');
         const form = document.getElementById('form-deletar');
@@ -456,15 +414,13 @@
         form.action = url; // Define a URL do cliente no formulário
     }
 
-    // Quando clicar no botão cancelar
+    // Cancelar Deletar Cliente
     document.getElementById('cancelar').addEventListener('click', () => {
         const modal = document.getElementById('modal-confirmacao');
         modal.classList.add('hidden');
     });
 
-    // Modal Adicionar Item ------------------------------------------------/
-
-    // Função Abrir Modal Adicionar Item
+    // Modal Adicionar Item
     function toggleModal() {
         const modal = document.querySelector('#modalAdicionarItens');
         const tableAddItems = document.getElementById('table-add-items');
@@ -477,22 +433,49 @@
         console.log(tableAddItems);
     }
 
-    // Função para abrir ou fechar o modal de confirmação de Deletar Item
-    function modalDeletarItem(action = 'toggle') {
-        const modalDeletarItem = document.getElementById('modalDeletarItem');
-        if (!modalDeletarItem) {
-            console.error('Modal não encontrado!');
+    // Modal Deletar Itens
+    function modalDeletarItem(action) {
+        const modal = document.getElementById('modalDeletar');
+        modal.classList.toggle('hidden', action !== 'open');
+    }
+
+    // Selecionar todos os itens e enviar ao backend
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+        const selectedItems = Array.from(checkboxes).map(cb => cb.closest('tr').dataset.itemId);
+
+        if (selectedItems.length === 0) {
+            alert('Nenhum item selecionado!');
             return;
         }
 
-        if (action === 'open') {
-            modalDeletarItem.classList.remove('hidden');
-        } else if (action === 'close') {
-            modalDeletarItem.classList.add('hidden');
-        } else {
-            modalDeletarItem.classList.toggle('hidden');
-        }
-    }
+        fetch("{% url 'deletar_item' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ items: selectedItems })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Itens deletados com sucesso!');
+                    location.reload(); // Recarrega a página
+                } else {
+                    alert('Erro ao deletar itens.');
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+
+        modalDeletarItem('close'); // Fecha o modal
+    });
+
+    // Selecionar todos os checkboxes
+    document.getElementById('checkbox-select-all').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
 
     // Adicionar evento para o botão "Cancelar"
     document.getElementById('cancelBtn').addEventListener('click', () => {
