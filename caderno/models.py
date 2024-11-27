@@ -18,6 +18,7 @@ class Endereco(models.Model):
 class Cliente(models.Model):
     nome = models.CharField(max_length=200, verbose_name="Nome")
     contato = models.CharField(max_length=200, verbose_name="Contato")
+    observacao = models.TextField(blank=True, null=True, verbose_name="Observação")
     endereco = models.ForeignKey(Endereco, on_delete=models.CASCADE, verbose_name="Endereço")
     def __str__(self):
         return self.nome

@@ -100,20 +100,42 @@ def deletar_item(request):
 
 # Anotações dos Clientes
 def anotacoes(request, id=None):
+    if request.method == 'POST':
+        # Salvar Observação no modelo Cliente
+        try:
+            # Lê os dados do corpo da requisição
+            data = json.loads(request.body)  # Lê o JSON enviado
+            observacao = data.get('observacao', '')  # Obtém o campo 'observacao'
+
+            cliente = get_object_or_404(Cliente, id=id)  # Obtém o cliente com o id fornecido
+            cliente.observacao = observacao  # Atualiza a observação do cliente
+            cliente.save()  # Salva a alteração no banco de dados
+
+            return JsonResponse({'status': 'success', 'message': 'Observação salva com sucesso!'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Erro ao decodificar o JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+    # Requisição GET: Renderizar Página
     itens = Item.objects.all()
     cliente, cliente_itens, cliente_selecionado = None, [], False
+
     if id:
-        cliente = get_object_or_404(Cliente, id=id)
-        cliente_itens = ClienteItem.objects.filter(cliente=cliente).select_related('item')
+        cliente = get_object_or_404(Cliente, id=id)  # Obtém o cliente
+        cliente_itens = ClienteItem.objects.filter(cliente=cliente).select_related('item')  # Obtém os itens do cliente
         cliente_selecionado = True
-    total = sum(item.item.preco * item.quantidade for item in cliente_itens)
+
+    total = sum(item.item.preco * item.quantidade for item in cliente_itens)  # Calcula o total
     context = {
         'clientes': Cliente.objects.all(),
         'itens': itens,
         'cliente_itens': cliente_itens,
         'total': total,
         'cliente': cliente,
-        'cliente_selecionado': cliente_selecionado
+        'cliente_selecionado': cliente_selecionado,
+        'observacao': cliente.observacao if cliente else '',
     }
     return render(request, 'anotacoes.html', context)
 

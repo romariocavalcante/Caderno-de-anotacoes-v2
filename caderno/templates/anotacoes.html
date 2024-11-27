@@ -20,7 +20,7 @@
 
 
     <!-- Tabela de Itens -->
-    <section class="w-full">
+    <section class="w-full pb-3">
         <div class="">
             <h2 class="text-sm font-bold my-3 px-6 py-1 text-start border-b">
                 Anotações
@@ -30,8 +30,7 @@
             </h2>
 
             <!-- Exibe mensagem de aviso oculta por padrão -->
-            <div id="mensagemDiv" class="bg-gray-100 text-gray-800 my-1 flex justify-center items-center"
-                style="height: 25px;">
+            <div id="mensagemDiv" class=" text-gray-800 my-1 flex justify-center items-center" style="height: 25px;">
                 <span id="mensagemMsg" class="hidden">Selecione um cliente para &nbsp;<strong>adicionar</strong>&nbsp;
                     itens.</span>
             </div>
@@ -41,7 +40,7 @@
                 <!-- Botão de adicionar -->
                 <div class="flex justify-between items-center">
                     <button id="addItemBtn" onclick="toggleModal()"
-                        class="bg-green-500 text-white px-2 py-1 text-sm hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                        class="bg-green-500 text-white px-2 py-1 text-xs hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                         <i class="fas fa-plus"></i>
                         <span>Adicionar Item</span>
                     </button>
@@ -51,7 +50,7 @@
                 {% if cliente_selecionado %}
                 {% if cliente_itens %}
                 <button id="deleteBtn"
-                    class="bg-red-500 text-white px-2 py-1 text-sm hover:bg-red-600 transition duration-300 flex items-center space-x-2"
+                    class="bg-red-500 text-white px-2 py-1 text-xs hover:bg-red-600 transition duration-300 flex items-center space-x-2"
                     onclick="modalDeletarItem('open')">
                     <i class="fas fa-trash-alt"></i>
                     <span>Deletar</span>
@@ -61,17 +60,17 @@
             </div>
 
             <!-- Tabela de Itens -->
-            <div class="container-table overflow-y-auto mt-1 bg-white">
+            <div class="container-table overflow-y-auto mt-2 bg-white">
                 <table id="tabela-clientes" class="bg-white w-full text-xs">
-                    <thead class="bg-gray-200 sticky z-0" style="top: 0px;">
+                    <thead class="bg-gray-200 sticky z-0 t-0">
                         <tr>
-                            <th id="table-th" class="text-center">
-                                <input type="checkbox" class="form-checkbox h-4 w-4" id="checkbox-select-all">
+                            <th id="table-th" class="text-left flex py-1 px-1 py-1">
+                                <input type="checkbox" class="form-checkbox" id="checkbox-select-all">
                             </th>
-                            <th id="table-th" class=" text-left">Item</th>
-                            <th id="table-th" class=" text-center">Qtd</th>
-                            <th id="table-th" class=" text-left">Preço</th>
-                            <th id="table-th" class=" text-center">Data de Aquisição</th>
+                            <th id="table-th" class=" text-left px-1 py-1">Item</th>
+                            <th id="table-th" class=" text-left px-1 py-1">Qtd</th>
+                            <th id="table-th" class=" text-left px-2 py-1">Preço</th>
+                            <th id="table-th" class=" text-center px-2 py-1">Data</th>
                         </tr>
                     </thead>
 
@@ -82,10 +81,10 @@
                             <td id class="text-center">
                                 <input type="checkbox" class="form-checkbox h-4 w-4 item-checkbox">
                             </td>
-                            <td class="text-start">{{ cliente_item.item.nome }}</td>
-                            <td class="text-center">{{ cliente_item.quantidade }}</td>
-                            <td class="text-start">R$ {{ cliente_item.item.preco|floatformat:2 }}</td>
-                            <td class="text-center">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
+                            <td class="text-left px-1 py-1">{{ cliente_item.item.nome }}</td>
+                            <td class="text-left px-1 py-1">{{ cliente_item.quantidade }}</td>
+                            <td class="text-start px-1 py-1"><span style="font-size: 8px;">R$</span> {{ cliente_item.item.preco|floatformat:2 }}</td>
+                            <td class="text-center px-1 py-1">{{ cliente_item.data_registro|date:"D, d M Y : H:i" }}
                             </td>
                         </tr>
                         {% empty %}
@@ -104,12 +103,12 @@
 
                     <tfoot class="border sticky z-0" style="bottom: 0px;">
                         <tr>
-                            <td colspan="4" class="font-bold text-right text-base">Total</td>
+                            <td colspan="3" class="font-bold text-right text-base">Total</td>
                             {% if cliente_selecionado %}
-                            <td class="px-4 py-2 text-center text-lg font-bold">R$
+                            <td colspan="2" class="px-2 py-2 text-right text-sm font-bold">R$
                                 {{total|floatformat:2|default:"0.00"}}</td>
                             {% else %}
-                            <td class="px-4 py-2 text-center text-lg font-bold">R$ 0,00</td>
+                            <td colspan="2" class="px-0 py-2 text-right text-sm font-bold">R$ 0,00</td>
                             {% endif %}
                         </tr>
                     </tfoot>
@@ -117,15 +116,15 @@
             </div>
 
             <!-- Botões -->
-            <div class="mt-8 flex justify-end space-x-4">
+            <div class="mt-2 flex justify-end space-x-2">
                 <button id="partialPaymentBtn" onclick="togglePartialPaymentModal('open')"
-                    class="bg-yellow-500 text-white px-4 py-2 text-xs rounded-md hover:bg-yellow-600 transition duration-300 flex items-center space-x-2">
+                    class="bg-yellow-500 text-white px-2 py-1 text-xs hover:bg-yellow-600 transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-hand-holding-usd"></i>
                     <span>Pagamento Parcial</span>
                 </button>
 
                 <button id="confirmPaymentBtn" onclick="togglePaymentModal('open')"
-                    class="bg-green-500 text-white px-4 py-2 text-xs rounded-md hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+                    class="bg-green-500 text-white px-2 py-1 text-xs hover:bg-green-600 transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-check-circle"></i>
                     <span>Confirmar Pagamento</span>
                 </button>
@@ -313,54 +312,91 @@
 
             <!-- Modal de Pagamento Parcial -->
             <div id="partialPaymentModal"
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden"
-                style="z-index: 30;">
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden p-4">
+
                 <div class="bg-white rounded-lg p-6 max-w-lg w-full">
-                    <h3 class="text-xl font-semibold mb-4">Pagamento Parcial</h3>
-                    <p class="mb-4">Escolha o valor a ser pago e a forma de pagamento:</p>
+
+                    <h3 class="text-base font-semibold mb-4">Pagamento Parcial</h3>
+                    <p class="mb-4 text-xs">Escolha o valor a ser pago e a forma de pagamento:</p>
 
                     <!-- Formulário de pagamento parcial -->
                     <div class="space-y-4">
-                        <label for="partialAmount" class="text-lg">Valor do Pagamento Parcial:</label>
-                        <input type="number" id="partialAmount" class="border px-4 py-2 rounded-md w-full" value="0">
+                        <label for="partialAmount" class="text-xs">Valor do Pagamento Parcial:</label>
+                        <input type="number" id="partialAmount" class="border px-4 py-1 w-full text-xs" value="0">
 
                         <div class="mt-4">
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-3 mb-3">
                                 <input type="radio" id="creditCardPartial" name="paymentMethodPartial"
                                     class="form-radio h-5 w-5 text-green-500" checked>
-                                <label for="creditCardPartial" class="text-lg">Cartão de Débito</label>
+                                <label for="creditCardPartial" class="text-xs">Cartão de Débito</label>
                             </div>
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-3 mb-3">
                                 <input type="radio" id="boletoPartial" name="paymentMethodPartial"
                                     class="form-radio h-5 w-5 text-blue-500">
-                                <label for="boletoPartial" class="text-lg">Cartão de Crédito</label>
+                                <label for="boletoPartial" class="text-xs">Cartão de Crédito</label>
                             </div>
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-3 mb-3">
                                 <input type="radio" id="paypalPartial" name="paymentMethodPartial"
                                     class="form-radio h-5 w-5 text-yellow-500">
-                                <label for="paypalPartial" class="text-lg">Dinheiro</label>
+                                <label for="paypalPartial" class="text-xs">Dinheiro</label>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <input type="radio" id="pixPartial" name="paymentMethodPartial"
                                     class="form-radio h-5 w-5 text-purple-500">
-                                <label for="pixPartial" class="text-lg">Pix</label>
+                                <label for="pixPartial" class="text-xs">Pix</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-6 flex justify-between items-center">
-                        <span class="text-lg font-semibold">Total do Pagamento:</span>
-                        <span class="text-xl text-green-600">R$ 150,00</span>
+                        <span class="text-xs font-semibold">Total da Dívida:</span>
+                        <span class="text-xs text-green-600">R$ 120,00</span>
+                    </div>
+                    <div class="mt-2 flex justify-between items-center">
+                        <span class="text-xs font-semibold">Valor do AV.:</span>
+                        <span class="text-xs text-green-600">R$ 100,00</span>
                     </div>
 
                     <div class="flex justify-end space-x-4 mt-6">
                         <button id="cancelPartialPaymentBtn"
-                            class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">
+                            class="bg-gray-400 text-white text-xs px-4 py-2 rounded-md hover:bg-gray-500">
                             Cancelar
                         </button>
                         <button id="submitPartialPaymentBtn"
-                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                            class="bg-green-500 text-white text-xs px-4 py-2 rounded-md hover:bg-green-600">
                             Confirmar Pagamento Parcial
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Confirmação de Pagamento Parcial -->
+            <!-- Modal de Confirmação -->
+            <div id="confirmationModal"
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden p-4">
+                <div class="bg-white rounded-lg p-6 max-w-lg w-full">
+                    <h3 class="text-base font-semibold mb-4">Confirmação de Pagamento</h3>
+                    <p class="mb-4 text-xs">Confira os detalhes do pagamento:</p>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold">Valor Pago:</span>
+                            <span id="finalPartialAmount" class="text-xs text-green-600">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold">Valor Restante:</span>
+                            <span id="remainingAmount" class="text-xs text-red-600">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mt-6">
+                        <button id="cancelFinalPaymentBtn"
+                            class="bg-gray-400 text-white text-xs px-4 py-2 rounded-md hover:bg-gray-500">
+                            Voltar
+                        </button>
+                        <button id="submitFinalPaymentBtn"
+                            class="bg-green-500 text-white text-xs px-4 py-2 rounded-md hover:bg-green-600">
+                            Confirmar Pagamento
                         </button>
                     </div>
                 </div>
@@ -370,34 +406,24 @@
 
     <!-- Observações -->
     <section class="w-full">
-        <div class="">
-            <h2 class="text-base font-bold bg-gray-200 text-center">
+        <div>
+            <h2 class="text-sm py-1 font-bold bg-gray-200 text-center">
                 Observações
             </h2>
         </div>
 
-        <div class="bg-gray-100">
-            <textarea id="observacoesTextarea"
-                class="w-full text-left py-5 px-4 resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
-                style="height: 20%; text-indent: 0;" placeholder="Adicione suas observações aqui...">
-            </textarea>
-        </div>
+        <!-- Campo de Observações -->
+        <textarea id="observacoesTextarea"
+            class="w-full text-left py-5 px-4 text-xs resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
+            style="height: 100px; text-indent: 0;"
+            placeholder="Adicione suas observações aqui...">{{ observacao }}</textarea>
 
-        <div class="flex justify-between mt-6 space-x-4">
-            <!-- Botão de adicionar Observações -->
-            <button id="addItemBtn"
-                class="bg-green-500 text-white text-xs py-1 px-2 hover:bg-green-600 transition duration-300 flex items-center space-x-2">
-                <i class="fas fa-plus"></i>
-                <span>Salvar</span>
-            </button>
-
-            <!-- Botão de deletar Observações -->
-            <button id="deleteBtn"
-                class="bg-red-500 text-white text-xs py-1 px-2 hover:bg-red-600 transition duration-300 flex items-center space-x-2">
-                <i class="fas fa-trash-alt"></i>
-                <span>Deletar</span>
-            </button>
-        </div>
+        <!-- Botão para Salvar Observação -->
+        <button id="addObservacaoBtn"
+            class="mt-4 bg-green-500 text-white text-xs py-1 px-3 hover:bg-green-600 transition duration-300 flex items-center space-x-2">
+            <i class="fas fa-save"></i>
+            <span>Salvar</span>
+        </button>
     </section>
 
 </main>
@@ -625,6 +651,118 @@
     // Adicionar evento ao botão de "Cancelar"
     document.getElementById('cancelPartialPaymentBtn').addEventListener('click', () => {
         togglePartialPaymentModal('close');
+    });
+
+
+    // Salvar as Observações do Cliente
+    // Ajax fica escutando alterações em observações para atualizar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const csrfToken = "{{ csrf_token }}";
+        const saveButton = document.getElementById('addObservacaoBtn');
+        const textarea = document.getElementById('observacoesTextarea');
+        const clienteId = "{{ cliente.id }}"; // A ID do cliente
+
+        // Função para salvar as alterações das observações
+        const updateObservacao = async () => {
+            try {
+                const response = await fetch(`/cliente/${clienteId}/`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                });
+                const data = await response.json();
+                if (data.observacao) {
+                    textarea.value = data.observacao;  // Atualiza o campo de texto
+                }
+            } catch (error) {
+                console.error('Erro ao buscar observação:', error);
+            }
+        };
+
+        // Intervalo para verificar mudanças na observação
+        // setInterval(updateObservacao, 5000);  // Atualiza a cada 5 segundos
+
+        // Evento para salvar a observação
+        saveButton.addEventListener('click', async () => {
+            const observacao = textarea.value;
+
+            try {
+                const response = await fetch(`/cliente/${clienteId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({ observacao }),
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    alert('Observação salva com sucesso!');
+                } else {
+                    alert('Erro ao salvar observação: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Erro ao salvar observação. Verifique sua conexão.');
+            }
+        });
+    });
+
+    // WebSocket para escutar alterações na página
+    // ID do cliente
+    var clienteId = {{ cliente.id }};
+    var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // WebSocket para escutar alterações nas observações
+    var socket = new WebSocket(`ws://${window.location.host}/ws/cliente/${clienteId}/`);
+
+    // Quando o WebSocket se conecta
+    socket.onopen = function () {
+        console.log('Conectado ao WebSocket!');
+    };
+
+    // Quando o WebSocket recebe uma mensagem
+    socket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const observacoesTextarea = document.getElementById('observacoesTextarea');
+        if (data.observacao) {
+            observacoesTextarea.value = data.observacao; // Atualiza o campo de texto
+        }
+    };
+
+    // Quando ocorre um erro no WebSocket
+    socket.onerror = function (err) {
+        console.log('Erro no WebSocket:', err);
+    };
+
+    // Quando o botão de salvar é clicado
+    document.getElementById('addObservacaoBtn').addEventListener('click', async function () {
+        const observacao = document.getElementById('observacoesTextarea').value;
+
+        // Envia a observação para o WebSocket
+        socket.send(JSON.stringify({ 'observacao': observacao }));
+
+        try {
+            const response = await fetch(`/cliente/${clienteId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ observacao })
+            });
+
+            const result = await response.json();
+            if (result.status === 'success') {
+                console.log('Observação salva com sucesso!');
+            } else {
+                alert('Erro ao salvar observação: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+        }
     });
 
 
