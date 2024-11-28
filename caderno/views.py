@@ -140,6 +140,17 @@ def anotacoes(request, id=None):
     return render(request, 'anotacoes.html', context)
 
 # Histórico
+# def historico(request):
+#     cliente_id = request.GET.get('cliente_id')
+#     historico = HistoricoCliente.objects.filter(cliente__id=cliente_id) if cliente_id else HistoricoCliente.objects.all()
+#     total = historico.aggregate(total=Sum(F('item__preco') * F('cliente__clienteitem__quantidade')))['total'] or 0
+#     context = {
+#         'historico': historico,
+#         'clientes_unicos': Cliente.objects.all(),
+#         'total': total
+#     }
+#     return render(request, 'historico.html', context)
+
 def historico(request):
     cliente_id = request.GET.get('cliente_id')
     historico = HistoricoCliente.objects.filter(cliente__id=cliente_id) if cliente_id else HistoricoCliente.objects.all()
